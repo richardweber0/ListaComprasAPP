@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Alert, StyleSheet, View } from 'react-native';
 import { Button, Input, Text } from 'react-native-elements';
 import styles from '../style/MainStyle.js';
+import usuarioService from '../services/UsuarioService';
 
 export default function Cadastro({ navigation }) {
 
@@ -11,6 +12,7 @@ export default function Cadastro({ navigation }) {
     const [errorUsuario, setErrorUsuario] = useState(null)
     const [errorSenha, setErrorSenha] = useState(null)
     const [errorSenhaRepetida, setErrorSenhaRepetida] = useState(null)
+    const [isLoading, setLoading] = useState(null)
 
     const validar = () => {
         let error = false
@@ -34,7 +36,25 @@ export default function Cadastro({ navigation }) {
 
     const salvar = () => {
         if (validar()) {
+            setLoading(true)
 
+            let data = {
+                id: 5,
+                usuario: usuario,
+                senha: senha
+            }
+
+            usuarioService.cadastrar(data)
+                .then((response) => {
+                    setLoading(false)
+                    const titulo = (response.data.status) ? "Sucesso" : "Erro"
+                    Alert.alert(titulo, response.data.mensagem)
+                })
+                .catch((error) => {
+                    setLoading(false)
+                    console.log(error)
+                    Alert.alert("Erro", "Ocorreu um erro inesperado.")
+                })
         }
     }
 
@@ -71,11 +91,13 @@ export default function Cadastro({ navigation }) {
                 errorMessage={errorSenhaRepetida}
                 returnKeyType='done'
             />
-            <Button
-                title="Cadastrar"
-                buttonStyle={specificStyle.button}
-                onPress={() => salvar()}
-            />
+            {!isLoading &&
+                <Button
+                    title="Cadastrar"
+                    buttonStyle={specificStyle.button}
+                    onPress={() => salvar()}
+                />
+            }
         </View>
     );
 }

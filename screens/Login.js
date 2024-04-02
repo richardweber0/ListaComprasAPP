@@ -1,18 +1,36 @@
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Alert, StyleSheet, View } from 'react-native';
 import { Button, Input, Text } from 'react-native-elements';
 import styles from '../style/MainStyle.js';
+import { ActivityIndicator } from 'react-native-paper';
+import usuarioService from '../services/UsuarioService.js';
 
 export default function Login({ navigation }) {
 
     const [usuario, setUsuario] = useState(null)
     const [senha, setSenha] = useState(null)
+    const [isLoading, setLoading] = useState(false)
 
     const entrar = () => {
-        navigation.reset({
-            index: 0,
-            routes: [{ name: "Principal" }]
-        })
+
+        let data = {
+            username: usuario,
+            password: senha
+        }
+
+        usuarioService.login(data)
+            .then((response) => {
+                setLoading(false)
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: "Principal" }]
+                })
+            })
+            .catch((error) => {
+                setLoading(false)
+                console.log(error)
+                Alert.alert("Erro", "Ocorreu um erro inesperado.")
+            })
     }
 
     const cadastrar = () => {
@@ -33,11 +51,19 @@ export default function Login({ navigation }) {
                 onChangeText={value => setSenha(value)}
                 secureTextEntry={true}
             />
-            <Button
-                title="Entrar"
-                buttonStyle={specificStyle.button}
-                onPress={() => entrar()}
-            />
+
+            {isLoading &&
+                <ActivityIndicator> </ActivityIndicator>
+            }
+
+            {!isLoading &&
+                <Button
+                    title="Entrar"
+                    buttonStyle={specificStyle.button}
+                    onPress={() => entrar()}
+                />
+            }
+
             <Button
                 title="Criar nova conta"
                 buttonStyle={specificStyle.button}
