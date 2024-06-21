@@ -7,6 +7,7 @@ import Cadastro from './screens/Cadastro';
 import Cadastrar from './screens/Cadastrar';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Alterar from './screens/Alterar';
 
 const Stack = createNativeStackNavigator();
 
@@ -17,6 +18,7 @@ function MyStack() {
       <Stack.Screen name="Principal" component={Principal} options={{ headerShown: false }} />
       <Stack.Screen name="Cadastro" component={Cadastro} />
       <Stack.Screen name="Cadastrar" component={Cadastrar} />
+      <Stack.Screen name="Alterar" component={Alterar} />
     </Stack.Navigator>
   );
 }
@@ -27,6 +29,7 @@ function refreshToken() {
   }, err => {
     return new Promise((resolve, reject) => {
       const originalReq = err.config
+      console.log(err)
       if (err.response.status == 401 && err.config && !err.config._retry) {
         originalReq._retry = true
         AsyncStorage.getItem("TOKEN").then((token) => {

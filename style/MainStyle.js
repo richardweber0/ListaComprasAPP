@@ -7,26 +7,20 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    container: {
-        //flex: 1,
-        marginTop: 40,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
     containerCadastro: {
         marginTop: 10,
         alignItems: 'center',
         justifyContent: 'center',
     },
     menuBar: {
+        marginTop: 40,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
         backgroundColor: '#E0E0E0',
         paddingHorizontal: 10,
         paddingVertical: 10,
-        marginTop: 0,
+        marginBottom: 3,
     },
     title: {
         flex: 1,
@@ -51,7 +45,7 @@ const styles = StyleSheet.create({
         width: '80%',
         borderWidth: 1,
         borderRadius: 5,
-    }
+    },
 });
 
 export default styles

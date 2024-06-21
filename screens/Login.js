@@ -14,7 +14,7 @@ export default function Login({ navigation }) {
     const [isLoadingToken, setLoadingToken] = useState(true)
 
     const entrar = () => {
-
+        
         let data = {
             username: usuario,
             password: senha

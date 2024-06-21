@@ -1,17 +1,39 @@
 import { Alert, StyleSheet, View } from "react-native";
 import { Button, Text } from "react-native-elements";
 import styles from "../style/MainStyle";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TextInput } from "react-native-paper";
 import itemService from "../services/ItemService";
 
-export default function Cadastrar({ navigation }) {
+export default function Alterar({ route, navigation }) {
+    const { id } = route.params;
     const [itemNome, setItemNome] = useState('')
     const [itemDescricao, setItemDescricao] = useState('')
-    const [itemQuantidade, setItemQuantidade] = useState(1)
     const [errorNome, setErrorNome] = useState('')
     const [errorDescricao, setErrorDescricao] = useState('')
     const [isLoading, setLoading] = useState(false)
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                itemService.buscar(id)
+                    .then((response) => {
+                        setItemNome(response.data.nome)
+                        setItemDescricao(response.data.descricao)
+                        setLoading(false)
+                    })
+                    .catch((error) => {
+                        setLoading(false)
+                        console.log(error)
+                        Alert.alert("Erro", "Ocorreu um erro inesperado.")
+                    })
+            } catch (error) {
+                console.error('Erro ao buscar dados:', error);
+            }
+        };
+
+        fetchData();
+    }, [id]);
 
     const validar = () => {
         let error = false
@@ -28,16 +50,17 @@ export default function Cadastrar({ navigation }) {
         return !error
     }
 
-    const cadastrar = () => {
+    const Alterar = () => {
         if (validar()) {
             setLoading(true)
 
             let data = {
+                id: id,
                 nome: itemNome,
                 descricao: itemDescricao
             }
 
-            itemService.cadastrar(data)
+            itemService.alterar(data)
                 .then((response) => {
                     setLoading(false)
                     const titulo = (response.data.status) ? "Sucesso" : "Erro"
@@ -89,9 +112,9 @@ export default function Cadastrar({ navigation }) {
 
             {!isLoading &&
                 <Button
-                    title="Cadastrar"
+                    title="Alterar"
                     buttonStyle={specificStyle.button}
-                    onPress={() => cadastrar()}
+                    onPress={() => Alterar()}
                 />
             }
         </View>
